@@ -1,0 +1,52 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       Int       @id @default(autoincrement())
+  name     String?
+  email    String    @unique
+  role     Role      @default(USER)
+  articles Article[]
+  Comment  Comment[]
+}
+
+model Article {
+  id          Int        @id @default(autoincrement())
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  published   Boolean    @default(false)
+  title       String     @db.VarChar(255)
+  content     String?
+  image       String?
+  author      User?      @relation(fields: [authorId], references: [id])
+  authorId    Int?
+  Categorie   Categorie? @relation(fields: [categorieId], references: [id])
+  categorieId Int?
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model Categorie {
+  id       Int       @id @default(autoincrement())
+  name     String    @unique
+  articles Article[]
+}
+
+model Comment {
+  id       Int     @id @default(autoincrement())
+  content  String?
+  poster   User?   @relation(fields: [posterId], references: [id])
+  posterId Int?
+}
