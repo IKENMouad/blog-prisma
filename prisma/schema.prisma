@@ -14,6 +14,7 @@ model User {
   id       Int       @id @default(autoincrement())
   name     String?
   email    String    @unique
+  password String    @unique
   role     Role      @default(USER)
   articles Article[]
   Comment  Comment[]
@@ -31,6 +32,7 @@ model Article {
   authorId    Int?
   Categorie   Categorie? @relation(fields: [categorieId], references: [id])
   categorieId Int?
+  Comment     Comment[]
 }
 
 enum Role {
@@ -49,4 +51,7 @@ model Comment {
   content  String?
   poster   User?   @relation(fields: [posterId], references: [id])
   posterId Int?
+
+  article   Article? @relation(fields: [articleId], references: [id])
+  articleId Int?
 }
